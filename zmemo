@@ -33,8 +33,8 @@ function __nsend {
   notify-send --icon="face-${1}" --expire-time=$et "$2"
 }
 
-function zm_list
-{ # Display list of memo/notes
+# Display list of memo/notes
+function zm_list { 
   local note;
   declare -a all_notes="$(ls -i ${zn_work_loc})"
   if [[ -z $all_notes ]]
@@ -61,8 +61,7 @@ function zm_list
 }
 
 # Make new zmemo
-function zm_new
-{
+function zm_new {
   local fnpath
   zty=$(zenity --forms \
   --show-header --width=400 \
@@ -95,8 +94,8 @@ function zm_new
   ;; esac
 }
 
-function zm_view_edit
-{ # View/edit selected memo
+# View/edit selected memo
+function zm_view_edit {
   local file=$zn_work_loc/$1
   local t_file="$file.$(date +%s%N).tmp"
   local act="--text-info \
