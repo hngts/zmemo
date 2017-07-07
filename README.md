@@ -22,8 +22,9 @@ Simple and basic, yet very usable and non-bloated memos for Your every day life.
 
 ## Good to know:
 
+- *zmemo* allows only one working, launched instance 
 - *zmemo* files are ordinary plain text files stored inside `~/.local/share/zmemo`.
-- When You add new *zmemo file*, blank spaces in file name will be replaced with underscore `_`.
+- When You add new *zmemo file*, blank spaces in file name will be replaced with underscore `_`. 
 
 ## Configuration:
 
@@ -36,4 +37,4 @@ In order to change ...
 
 ### Application launcher item
 
-If You want (KDE users for example) to *click* and open (instead of typing command) memo's, create new desktop file (eg:`/usr/share/applications/zmemo.desktop`) and paste contents from `zmemo.desktop`. You may want to uncomment `#icon=` line and provide some. 
+If You want (KDE users for example) to *click* and open (instead of typing command) memo's, create new desktop file (eg:`/usr/share/applications/zmemo.desktop`) and paste contents from `zmemo.desktop`. You may want to uncomment `#Icon=` line and provide some. 
