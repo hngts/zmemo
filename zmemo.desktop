@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Zmemo
+Type=Application
+Comment=Memo notes for You
+Terminal=false
+Exec=zmemo list
+#Icon=
+Categories=Office;Utilities;
+GenericName=Zmemo notes list
