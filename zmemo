@@ -1,0 +1,136 @@
+#!/bin/bash
+
+## Memos and notes based on Zenity; aka - `zmemo`
+#
+# Creation Date: 03.03.2017
+# Licence: This file is restricted as much as GNU/Linux is.
+# Go figure that.
+#
+# Author: Srđan Vukić <tux.lector@gmail.com>
+# Depends-on: zenity, libnotify ('notify-send' command)
+
+# Program name
+readonly bsn=$(basename $0)
+readonly dnm=$(dirname $0)
+
+# Allow only one instance of zmemo
+bsnrun=$(ps h -C $bsn | grep -v $$ | wc -l);
+[[ $bsnrun > 1 ]] && exit;
+
+## Basic config
+# Directory where zmemo files reside
+# $bsn is this very script name
+declare -r zn_work_loc=$HOME/.local/share/$bsn
+declare -r zn_lw=400; # Default width
+declare -r zn_lh=600; # Default height
+## End of basic config
+
+[[ -d $zn_work_loc ]] || mkdir -p $zn_work_loc
+
+# Notifier
+function __nsend {
+  local et=5000; [[ $3 ]] && et=$3;
+  notify-send --icon="face-${1}" --expire-time=$et "$2"
+}
+
+function zm_list
+{ # Display list of memo/notes
+  local note;
+  declare -a all_notes="$(ls -i ${zn_work_loc})"
+  if [[ -z $all_notes ]]
+  then zenity --info \
+    --text="There are no memo/notes to view/edit.\
+    \nYou may want to try with <b>$bsn new</b> command." 2> /dev/null
+
+  else
+    local zty=$(zenity --list \
+    --radiolist --width=$zn_lw --height=$zn_lh \
+    --title="Choose the note/memo to view/edit" \
+    --column="Select" --column="Existing memo/note" $all_notes \
+    --cancel-label="EXIT" --ok-label="LOAD SELECTED" 2> /dev/null)
+
+    if [[ -z $zty ]]
+    then
+      if pgrep -x "$bsn" > /dev/null
+      then pkill -f "$bsn"; fi
+    else
+      zm_view_edit $zty 2> /dev/null
+    fi
+  fi
+
+}
+
+# Make new zmemo
+function zm_new
+{
+  local fnpath
+  zty=$(zenity --forms \
+  --show-header --width=400 \
+  --title="Create new memo/note" \
+  --text="Provide a name for your memo/note" \
+  --add-entry="Name:" 2> /dev/null)
+
+  case $?
+  in 0)
+    if [[ -z $zty ]]
+      then
+        __nsend worried "Name for new memo/note cannot be empty"
+    else
+
+      zty=${zty// /_}; fnpath="$zn_work_loc/$zty"
+
+      if [[ -f $fnpath ]]
+        then
+        __nsend monkey "This memo/note already exists. Nothing happened."
+      else
+        touch $fnpath
+        __nsend cool "New memo/note successfully added!"
+        zm_view_edit $zty 2> /dev/null
+      fi
+    fi
+  ;; 1)
+    __nsend sad "No memo has been added."
+  ;; -1)
+    __nsend devilish "Kung-fu error has occurred!"
+  ;; esac
+}
+
+function zm_view_edit
+{ # View/edit selected memo
+  local file=$zn_work_loc/$1
+  local t_file="$file.$(date +%s%N).tmp"
+  local act="--text-info \
+  --title=$1 --filename=$file \
+  --width=$zn_lw --height=$zn_lh \
+  --editable --ok-label=MEMORIZE \
+  --cancel-label=LIST"
+
+  [[ ! -f $t_file ]] || rm -f $t_file
+  zenity $act > $t_file
+
+  if [[ $? -eq 0 ]]
+  then
+    cat $t_file > $file
+    __nsend smile-big "Memo '$1' saved"
+    rm -f $t_file && sleep 0.1s
+    zm_view_edit $1
+  elif [[ $? -eq 1 ]]
+    then
+    rm -f $t_file && sleep 0.1s
+    zm_list
+  else
+    sleep 0.1s && rm -f $t_file
+    fi
+
+}
+
+# Do `this` or `that`
+case $1
+in new ) zm_new;
+;; list ) zm_list;
+;; * ) zenity --info \
+  --text="Unknown parameter <b>'$1'</b>.\
+  \n\nYou may want to try with\
+  \n<b>$bsn new</b> or <b>$bsn list</b>\ncommands." 2> /dev/null
+;;
+esac
