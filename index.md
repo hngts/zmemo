@@ -1,37 +1,40 @@
-## Welcome to GitHub Pages
+# zmemo
+Zenity based memo/notes
 
-You can use the [editor on GitHub](https://github.com/hngts/zmemo/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Simple and basic, yet very usable and non-bloated memos for Your every day life.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Requirements: 
 
-### Markdown
+1. Linux operating system
+2. **zenity** and **libnotify** (*libnotify: notify-send* command) packages installed
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Installation instructions:
 
-```markdown
-Syntax highlighted code block
+1. Copy and paste all the contents of the zmemo file into your `~/bin` directory.
+2. Make script executable `chmod +x ~/bin/zmemo`
+3. Run `zmemo new` from Your command line or Your favorite search applet (eg: ALT+F2) capable of executing shell scripts
 
-# Header 1
-## Header 2
-### Header 3
+## Usage:
 
-- Bulleted
-- List
+- *zmemo* reckognizes two arguments: **new** or **list**
+- `zmemo new` will create new memo file
+- `zmemo list` will show a list of already created memo's
 
-1. Numbered
-2. List
+## Good to know:
 
-**Bold** and _Italic_ and `Code` text
+- *zmemo* allows only one working, launched instance 
+- *zmemo* files are ordinary plain text files stored inside `~/.local/share/zmemo`.
+- When You add new *zmemo file*, blank spaces in file name will be replaced with underscore `_`. 
 
-[Link](url) and ![Image](src)
-```
+## Configuration:
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+In order to change ...
 
-### Jekyll Themes
+- Default *width* and *height* of dialog box window, see lines **24** and **25** 
+- Default *zmemo* directory for Your *zmemo's*, line **23**
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/hngts/zmemo/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+... inside `~/bin/zmemo` it self. 
 
-### Support or Contact
+### Application launcher item
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+If You want (KDE users for example) to *click* and open (instead of typing command) memo's, create new desktop file (eg:`/usr/share/applications/zmemo.desktop`) and paste contents from `zmemo.desktop`. You may want to uncomment `#Icon=` line and provide some. 
